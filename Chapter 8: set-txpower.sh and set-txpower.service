@@ -1,0 +1,22 @@
+#### set-txpower.sh ####
+!/bin/bash
+# Wait until wlan0 is up
+while ! ip link show wlan0 | grep -q "state UP"; do
+    sleep 1
+done
+# Set Tx power to 1 dBm (100 centi-dBm)
+iw dev wlan0 set txpower fixed 100
+
+#### set-txpower.service ####
+[Unit]
+Description=Set Wi-Fi Tx Power to 1 dBm
+After=network.target
+Wants=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/set-txpower.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
