@@ -1,0 +1,16 @@
+#### sync-time.sh ####
+#!/bin/bash
+# Force Chrony to step the time from the host at boot
+/usr/bin/chronyc waitsync 10
+/usr/bin/chronyc makestep
+
+#### sync-time.service ####
+[Unit]
+Description=Force time sync from host at boot
+After=network-online.target chrony.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/sync-time.sh
+[Install]
